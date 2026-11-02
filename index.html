@@ -90,12 +90,43 @@ function showGroup(key){
 const nsProductMedia={};
 // Publish real, dated updates here. Empty means no published product update history.
 const nsProductHistory={};
+// Read pricing options from the catalog itself; do not infer prices from "From" labels.
+function nsPricingOptions(p){
+ if(Array.isArray(p.packages)&&p.packages.length){
+  return p.packages.map(pkg=>({label:pkg.name,price:pkg.price,description:pkg.subtitle||''}));
+ }
+ const result=[];
+ const pricingHeading=/(?:PLAN|PRIC|LICENSE|SUBSCRIPTION|ACCESS)/i;
+ for(const section of p.sections||[]){
+  const title=String(section[0]||'');
+  if(!pricingHeading.test(title))continue;
+  for(const raw of section[1]||[]){
+   const line=String(raw).trim();
+   // Match published monetary amounts, without converting them or inventing tiers.
+   const amount=line.match(/\$\s*([0-9]+(?:\.[0-9]{1,2})?)/);
+   if(!amount)continue;
+   let label=line.slice(0,amount.index).replace(/[—–:()\-\s]+$/g,'').replace(/^\s*[—–:()\-]+/g,'').trim();
+   let suffix=line.slice(amount.index+amount[0].length).replace(/^[)\s—–:]+/,'').trim();
+   if(!label){
+    const after=line.slice(amount.index+amount[0].length);
+    const access=after.match(/(?:LIFETIME|MONTHLY|WEEKLY|DAILY|YEARLY|SETUP|EAC ONLY|VGK ONLY)/i);
+    label=access?access[0]:'PRICE';
+   }
+   const price='$'+amount[1];
+   if(!result.some(x=>x.label.toLowerCase()===label.toLowerCase()&&x.price===price)){
+    result.push({label,price,description:suffix});
+   }
+  }
+ }
+ if(result.length)return result;
+ return [{label:'PRICE',price:p.price,description:''}];
+}
 function nsProductExtras(p){
  const media=(nsProductMedia[p.name]||[]).filter(m=>m&&typeof m.url==='string'&&/^https?:\/\//.test(m.url));
  const mediaMarkup=media.length
   ? `<div class="ns-gallery-main" id="ns-gallery-main"><img src="${esc(media[0].url)}" alt="${esc(media[0].alt||p.name+' product media')}" loading="lazy"></div><div class="ns-media-tabs">${media.map((m,i)=>`<button type="button" data-ns-media="${i}" aria-pressed="${i===0}">${esc(m.label||'MEDIA '+(i+1))}</button>`).join('')}</div>`
   : `<div class="ns-gallery-main"><img src="visual.png" alt="Nocturne Systems decorative artwork" loading="lazy"></div><p class="ns-gallery-note">Brand artwork · Product screenshots and demonstrations have not been uploaded.</p>`;
- const options=p.packages&&p.packages.length?p.packages.map(pkg=>({label:pkg.name,price:pkg.price,description:pkg.subtitle||''})):[{label:'LISTED PRICE',price:p.price,description:'Only the published catalog price is available.'}];
+ const options=nsPricingOptions(p);
  const priceMarkup=`<div class="ns-price-tabs">${options.map((opt,i)=>`<button type="button" data-ns-price="${i}" aria-pressed="${i===0}">${esc(opt.label)}</button>`).join('')}</div><div class="ns-price-detail" id="ns-price-detail"><strong>${esc(options[0].price)}</strong>${options[0].description?' · '+esc(options[0].description):''}</div>`;
  const history=nsProductHistory[p.name]||[];
  const historyMarkup=history.length?history.map(item=>`<div class="ns-history-entry"><time>${esc(item.date||'')}</time><h4>${esc(item.title||'Update')}</h4><p>${esc(item.description||'')}</p></div>`).join(''):'<p class="ns-history-empty">No product-specific updates have been published yet.</p>';
@@ -110,7 +141,7 @@ function nsWireExtras(p){
   main.replaceChildren();const img=document.createElement('img');img.src=m.url;img.alt=m.alt||p.name+' product media';img.loading='lazy';main.append(img);
   document.querySelectorAll('[data-ns-media]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
  }));
- const opts=p.packages&&p.packages.length?p.packages.map(pkg=>({price:pkg.price,description:pkg.subtitle||''})):[{price:p.price,description:'Only the published catalog price is available.'}];
+ const opts=nsPricingOptions(p);
  const detail=document.getElementById('ns-price-detail');
  document.querySelectorAll('[data-ns-price]').forEach(btn=>btn.addEventListener('click',()=>{
   const o=opts[Number(btn.dataset.nsPrice)];if(!o||!detail)return;
