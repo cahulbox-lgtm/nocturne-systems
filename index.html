@@ -19,8 +19,8 @@ const products=[{"name": "VEIL Firmware", "category": "Firmware", "price": "$80"
 // Set these values only after manually verifying a product's availability.
 // Accepted values: online, updating, maintenance, unverified.
 const productStatuses={};
-function getProductStatus(name){const item=productStatuses[name]||{status:'unverified',checked:''};const allowed=['online','updating','maintenance','unverified'];return {status:allowed.includes(item.status)?item.status:'unverified',checked:item.checked||''}}
-function statusMarkup(name){const s=getProductStatus(name);const labels={online:'ONLINE',updating:'UPDATING',maintenance:'MAINTENANCE',unverified:'STATUS NOT VERIFIED'};return `<div class="ns-status" title="${esc(s.checked?'Last verified: '+s.checked:'Availability not verified')}"><i class="ns-status-dot ${s.status}"></i>${labels[s.status]}${s.checked?' · '+esc(s.checked):''}</div>`}
+function getProductStatus(name){const item=productStatuses[name]||{status:'undetected',checked:''};const allowed=['online','updating','maintenance','undetected'];return {status:allowed.includes(item.status)?item.status:'unverified',checked:item.checked||''}}
+const labels={online:'ONLINE',updating:'UPDATING',maintenance:'MAINTENANCE',unverified:'STATUS NOT VERIFIED',undetected:'UNDETECTED'};return `<div class="ns-status" title="${esc(s.checked?'Last verified: '+s.checked:'Availability not verified')}"><i class="ns-status-dot ${s.status}"></i>${labels[s.status]}${s.checked?' · '+esc(s.checked):''}</div>`}
 function draw(){
  const q=search.value.trim().toLowerCase();
  const groupedNames=new Set(['1PC AI Aimbot','2PC AI Aimbot','Perm Woofer','Manual Woof']);
