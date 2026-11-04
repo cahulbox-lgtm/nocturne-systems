@@ -361,4 +361,28 @@ tabs.forEach((tab,i)=>tab.addEventListener('click',()=>{selected=i;search.value=
 search.addEventListener('input',update);
 update();
 })();
+</script><script>
+/* Nocturne CMS: optional remote overrides. The original catalog stays as fallback. */
+(async function(){
+ try{
+  const r=await fetch('/api/site-content',{cache:'no-store'});if(!r.ok)return;
+  const {content:c}=await r.json();if(!c)return;
+  if(Array.isArray(c.products)&&c.products.length&&typeof products!=='undefined'){
+   products.splice(0,products.length,...c.products);if(typeof draw==='function')draw();
+  }
+  if(Array.isArray(c.changelog)){
+   const list=document.getElementById('ns-update-list');
+   if(list){list.replaceChildren();for(const e of c.changelog){const article=document.createElement('article');article.className='ns-update';const date=document.createElement('div');date.className='ns-update-date';date.textContent=e.date||'';const inner=document.createElement('div');const title=document.createElement('h3');title.className='ns-update-title';title.textContent=e.title||'';const desc=document.createElement('p');desc.className='ns-update-desc';desc.textContent=e.description||'';inner.append(title,desc);article.append(date,inner);list.append(article)}}
+  }
+  if(Array.isArray(c.faq)){
+   const tabs=document.querySelector('.ns-faq-tabs'),panels=document.getElementById('ns-faq-panels');
+   if(tabs&&panels){tabs.replaceChildren();panels.replaceChildren();for(let i=0;i<c.faq.length;i++){const g=c.faq[i],b=document.createElement('button');b.type='button';b.className='ns-faq-tab'+(i===0?' active':'');b.dataset.faqTab=i;b.textContent=g.title||'CATEGORY';b.setAttribute('role','tab');b.setAttribute('aria-selected',String(i===0));tabs.append(b);const p=document.createElement('div');p.className='ns-faq-panel';p.dataset.faqPanel=i;p.setAttribute('role','tabpanel');p.hidden=i!==0;for(const item of g.questions||[]){const d=document.createElement('details');d.className='ns-faq-item';const q=document.createElement('summary');q.textContent=item.question||'';const a=document.createElement('p');a.textContent=item.answer||'';d.append(q,a);p.append(d)}panels.append(p)}tabs.querySelectorAll('button').forEach((b,i)=>b.onclick=()=>{document.getElementById('ns-faq-search').value='';tabs.querySelectorAll('button').forEach((t,j)=>{t.classList.toggle('active',i===j);t.setAttribute('aria-selected',String(i===j))});panels.querySelectorAll('.ns-faq-panel').forEach((p,j)=>{p.hidden=i!==j;p.querySelectorAll('.ns-faq-item').forEach(x=>x.hidden=false)})});}
+  }
+  if(c.support&&typeof c.support==='object'){
+   const el=document.querySelector('.ns-support-center');
+   if(el){const h=el.querySelector('h2'),p=el.querySelector('.ns-support-lead'),stats=el.querySelectorAll('.ns-support-stat strong');if(h&&c.support.title)h.textContent=c.support.title;if(p&&c.support.description)p.textContent=c.support.description;if(stats[0]&&c.support.channel)stats[0].textContent=c.support.channel;if(stats[1]&&c.support.response)stats[1].textContent=c.support.response;}
+  }
+  if(c.settings&&c.settings.discordUrl&&/^https:\/\/discord\.(gg|com)\//i.test(c.settings.discordUrl)){document.querySelectorAll('a[href*="discord.gg/"]').forEach(a=>a.href=c.settings.discordUrl)}
+ }catch(e){console.warn('CMS content unavailable; showing built-in site content.')}
+})();
 </script></body></html>
