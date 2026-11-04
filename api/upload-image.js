@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 const json=(res,status,body)=>res.status(status).setHeader('Cache-Control','no-store').json(body);
 const url=process.env.SUPABASE_URL||process.env.SUPABASE_SUPABASE_URL;
 const service=process.env.SUPABASE_SERVICE_ROLE_KEY||process.env.SUPABASE_SUPABASE_SERVICE_ROLE_KEY;
@@ -32,7 +33,7 @@ export default async function handler(req,res){
    const created=await fetch(base+'/bucket',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({id:bucket,name:bucket,public:true,file_size_limit:2500000,allowed_mime_types:['image/png','image/jpeg','image/webp']})});
    if(!created.ok&&created.status!==409)return json(res,502,{error:'Unable to create media bucket'});
   }else if(!check.ok)return json(res,502,{error:'Storage bucket unavailable'});
-  const objectName=Date.now()+'-'+crypto.randomUUID()+'.'+ext;
+  const objectName=Date.now()+'-'+randomUUID()+'.'+ext;
   const put=await fetch(base+'/object/'+bucket+'/'+objectName,{method:'POST',headers:{...headers,'Content-Type':mime,'x-upsert':'false'},body:data});
   if(!put.ok)return json(res,502,{error:'Image upload failed'});
   return json(res,200,{url:base+'/object/public/'+bucket+'/'+objectName});
