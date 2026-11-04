@@ -386,4 +386,50 @@ update();
   if(c.settings&&c.settings.discordUrl&&/^https:\/\/discord\.(gg|com)\//i.test(c.settings.discordUrl)){document.querySelectorAll('a[href*="discord.gg/"]').forEach(a=>a.href=c.settings.discordUrl)}
  }catch(e){console.warn('CMS content unavailable; showing built-in site content.')}
 })();
+</script>
+<style>
+#ns-intro{position:fixed;inset:0;z-index:99999;background:#050608;color:#f3f3f4;overflow:hidden;display:grid;place-items:center;isolation:isolate;transition:opacity .85s ease,visibility .85s ease;font-family:Inter,Arial,sans-serif}
+#ns-intro.ns-intro-out{opacity:0;visibility:hidden;pointer-events:none}
+#ns-intro .ns-scene{position:absolute;inset:-8%;perspective:850px;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#1b1e24 0%,#08090c 37%,#030406 78%)}
+#ns-intro .ns-scene:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,#ffffff04 4px 5px),radial-gradient(ellipse,transparent 25%,#000c 90%);pointer-events:none}
+#ns-intro .ns-tunnel{position:absolute;left:50%;top:50%;width:min(78vw,850px);height:min(65vh,550px);transform:translate(-50%,-50%);border:1px solid #ffffff30;box-shadow:0 0 50px #dce4ff10,inset 0 0 45px #dce4ff08;animation:ns-tunnel-in 4s cubic-bezier(.15,.7,.2,1) both}
+#ns-intro .ns-tunnel:before,#ns-intro .ns-tunnel:after{content:"";position:absolute;inset:12%;border:1px solid #ffffff32;box-shadow:0 0 22px #ffffff12}
+#ns-intro .ns-tunnel:after{inset:29%;border-color:#ffffff4d;box-shadow:0 0 80px #ffffff22}
+#ns-intro .ns-line{position:absolute;top:50%;left:50%;height:1px;width:130vw;background:linear-gradient(90deg,transparent,#ffffff50 50%,transparent);transform-origin:center;opacity:.5}
+#ns-intro .ns-line.a{transform:translate(-50%,-50%) rotate(32deg)}#ns-intro .ns-line.b{transform:translate(-50%,-50%) rotate(-32deg)}
+#ns-intro .ns-glow{position:absolute;inset:0;background:radial-gradient(circle at center,#dce5ff12,transparent 32%);animation:ns-glow 3s ease-in-out infinite alternate}
+#ns-intro .ns-intro-content{position:relative;text-align:center;padding:24px;animation:ns-title-in 1.8s .25s both}
+#ns-intro .ns-eyebrow{font-size:10px;letter-spacing:.48em;color:#a7abb3;font-weight:700;margin-bottom:24px}
+#ns-intro .ns-wordmark{font-weight:900;font-size:clamp(38px,8vw,108px);line-height:.95;letter-spacing:-.07em;text-shadow:0 0 65px #ffffff35}
+#ns-intro .ns-wordmark span{display:block;font-size:clamp(13px,2.3vw,29px);letter-spacing:.52em;margin:16px 0 0 9px;font-weight:500}
+#ns-intro .ns-intro-bottom{position:absolute;bottom:clamp(38px,8vh,90px);width:min(400px,80vw);text-align:center}
+#ns-intro .ns-progress{height:1px;background:#ffffff24;overflow:hidden;margin:0 0 17px}
+#ns-intro .ns-progress i{display:block;height:100%;width:0;background:#f7f7f7;box-shadow:0 0 15px #fff;animation:ns-load 3.5s ease-in-out forwards}
+#ns-intro .ns-intro-status{font:10px monospace;letter-spacing:.23em;color:#a7aab2}
+#ns-intro .ns-enter{margin-top:22px;padding:13px 30px;background:#f3f3f4;color:#08090b;border:1px solid #fff;font:800 11px Inter,Arial,sans-serif;letter-spacing:.22em;cursor:pointer;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s}
+#ns-intro.ns-ready .ns-enter{opacity:1;transform:none}
+#ns-intro .ns-skip{position:absolute;right:clamp(18px,4vw,55px);top:clamp(18px,4vw,45px);border:1px solid #ffffff42;background:#0008;color:#d7d7da;padding:11px 16px;font:700 10px Inter,Arial,sans-serif;letter-spacing:.18em;cursor:pointer}
+#ns-intro button:focus-visible{outline:2px solid white;outline-offset:4px}
+@keyframes ns-tunnel-in{from{transform:translate(-50%,-50%) scale(2.3);opacity:.1}to{transform:translate(-50%,-50%) scale(.9);opacity:1}}
+@keyframes ns-title-in{from{opacity:0;filter:blur(18px);transform:scale(1.13)}to{opacity:1;filter:blur(0);transform:scale(1)}}
+@keyframes ns-load{0%{width:0}55%{width:72%}100%{width:100%}}
+@keyframes ns-glow{to{opacity:.4}}
+@media(prefers-reduced-motion:reduce){#ns-intro *,#ns-intro *:before,#ns-intro *:after{animation:none!important;transition:none!important}#ns-intro .ns-enter{opacity:1;transform:none}#ns-intro .ns-progress i{width:100%}}
+</style>
+<script>
+(function(){
+ const params=new URLSearchParams(location.search);
+ const force=params.get('intro')==='1';
+ try{if(!force&&sessionStorage.getItem('nocturne-intro-seen')==='1')return}catch(e){}
+ const root=document.createElement('div');root.id='ns-intro';root.setAttribute('role','dialog');root.setAttribute('aria-label','Nocturne Systems introduction');
+ root.innerHTML='<div class="ns-scene" aria-hidden="true"><div class="ns-tunnel"></div><div class="ns-line a"></div><div class="ns-line b"></div><div class="ns-glow"></div></div><button class="ns-skip" type="button">SKIP INTRO ↗</button><div class="ns-intro-content"><div class="ns-eyebrow">INITIALIZING EXPERIENCE</div><div class="ns-wordmark">NOCTURNE<span>SYSTEMS</span></div></div><div class="ns-intro-bottom"><div class="ns-progress"><i></i></div><div class="ns-intro-status" aria-live="polite">ESTABLISHING CONNECTION...</div><button class="ns-enter" type="button">ENTER EXPERIENCE →</button></div>';
+ document.body.append(root);
+ let closed=false;const status=root.querySelector('.ns-intro-status'),enter=root.querySelector('.ns-enter');
+ const close=()=>{if(closed)return;closed=true;try{sessionStorage.setItem('nocturne-intro-seen','1')}catch(e){}root.classList.add('ns-intro-out');setTimeout(()=>root.remove(),900)};
+ root.querySelector('.ns-skip').addEventListener('click',close);enter.addEventListener('click',close);
+ const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ setTimeout(()=>{if(closed)return;root.classList.add('ns-ready');status.textContent='SYSTEM READY // ACCESS GRANTED';enter.focus({preventScroll:true})},reduced?0:3500);
+ if(reduced)setTimeout(close,600);
+ document.addEventListener('keydown',function esc(e){if(e.key==='Escape'&&!closed){close();document.removeEventListener('keydown',esc)}});
+})();
 </script></body></html>
