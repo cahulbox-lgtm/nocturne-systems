@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nocturne — Admin</title><style>
-:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#08090b;color:#f4f4f5;font:14px Inter,Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}header{padding:22px 5%;border-bottom:1px solid #2e3036;display:flex;align-items:center;justify-content:space-between}h1{font-size:21px;letter-spacing:.12em}small,.muted{color:#9a9ba3}main{max-width:1180px;margin:36px auto;padding:0 20px}.panel{border:1px solid #35363c;background:#121318;border-radius:10px;padding:24px;margin:16px 0}input,textarea,select{display:block;width:100%;padding:13px;background:#090a0d;border:1px solid #454650;color:#fff;border-radius:5px;margin:8px 0 15px}textarea{min-height:100px;resize:vertical;line-height:1.5}#editor{min-height:380px;font:12px/1.65 Consolas,monospace}.entry{padding:20px;border:1px solid #34363c;background:#0b0c10;border-radius:8px;margin:14px 0}.entry h4{margin:0 0 14px}.entry-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.entry-grid .wide{grid-column:1/-1}.entry-actions{display:flex;gap:8px;justify-content:flex-end}.danger{color:#ffb6b6;border-color:#774545}.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:15px 0}.subtle{font-size:12px;color:#a5a6ae}.empty{padding:30px;border:1px dashed #454650;border-radius:8px;color:#aaa;text-align:center}.advanced{margin-top:20px;border-top:1px solid #333;padding-top:16px}details summary{cursor:pointer;font-weight:700;margin:10px 0}input:focus,textarea:focus,select:focus{outline:2px solid #aaa;outline-offset:1px}@media(max-width:650px){.entry-grid{grid-template-columns:1fr}.entry-grid .wide{grid-column:auto}.panel{padding:14px}}label{display:block;font-weight:700}button{padding:12px 18px;border:1px solid #55575e;background:#22242a;color:white;border-radius:5px}button.primary{background:#f2f2f4;color:#111;border-color:#f2f2f4;font-weight:800}button:disabled{opacity:.5}nav{display:flex;gap:8px;flex-wrap:wrap}nav button.active{background:#eee;color:#111}.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.hidden{display:none!important}#notice{min-height:24px;color:#bbb}code{color:#ddd}a{color:#fff}</style></head><body>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#08090b;color:#f4f4f5;font:14px Inter,Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}header{padding:22px 5%;border-bottom:1px solid #2e3036;display:flex;align-items:center;justify-content:space-between}h1{font-size:21px;letter-spacing:.12em}small,.muted{color:#9a9ba3}main{max-width:1180px;margin:36px auto;padding:0 20px}.panel{border:1px solid #35363c;background:#121318;border-radius:10px;padding:24px;margin:16px 0}input,textarea,select{display:block;width:100%;padding:13px;background:#090a0d;border:1px solid #454650;color:#fff;border-radius:5px;margin:8px 0 15px}textarea{min-height:100px;resize:vertical;line-height:1.5}#editor{min-height:380px;font:12px/1.65 Consolas,monospace}.entry{padding:20px;border:1px solid #34363c;background:#0b0c10;border-radius:8px;margin:14px 0}.entry h4{margin:0 0 14px}.product-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:16px 0}.product-tile{border:1px solid #363840;border-radius:9px;background:#111216;text-align:left;padding:0;overflow:hidden;min-height:170px}.product-tile:hover,.product-tile.selected{border-color:#eee}.product-tile img{width:100%;height:115px;object-fit:cover;background:#222}.product-tile .tile-info{padding:12px}.product-tile strong{display:block;margin-bottom:5px}.image-preview{width:100%;max-width:450px;max-height:210px;object-fit:cover;border:1px solid #444;border-radius:6px}.upload-input{max-width:450px}.entry-actions{flex-wrap:wrap}.entry-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.entry-grid .wide{grid-column:1/-1}.entry-actions{display:flex;gap:8px;justify-content:flex-end}.danger{color:#ffb6b6;border-color:#774545}.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:15px 0}.subtle{font-size:12px;color:#a5a6ae}.empty{padding:30px;border:1px dashed #454650;border-radius:8px;color:#aaa;text-align:center}.advanced{margin-top:20px;border-top:1px solid #333;padding-top:16px}details summary{cursor:pointer;font-weight:700;margin:10px 0}input:focus,textarea:focus,select:focus{outline:2px solid #aaa;outline-offset:1px}@media(max-width:650px){.entry-grid{grid-template-columns:1fr}.entry-grid .wide{grid-column:auto}.panel{padding:14px}}label{display:block;font-weight:700}button{padding:12px 18px;border:1px solid #55575e;background:#22242a;color:white;border-radius:5px}button.primary{background:#f2f2f4;color:#111;border-color:#f2f2f4;font-weight:800}button:disabled{opacity:.5}nav{display:flex;gap:8px;flex-wrap:wrap}nav button.active{background:#eee;color:#111}.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.hidden{display:none!important}#notice{min-height:24px;color:#bbb}code{color:#ddd}a{color:#fff}</style></head><body>
 <header><h1>NOCTURNE <small>/ ADMIN</small></h1><a href="/">VIEW WEBSITE ↗</a></header><main><section id="login" class="panel"><h2>SECURE ADMIN ACCESS</h2><p class="muted">Sign in with the administrator account created in Supabase Authentication.</p><label>Email<input id="email" type="email" autocomplete="username"></label><label>Password<input id="password" type="password" autocomplete="current-password"></label><button class="primary" id="sign-in">SIGN IN</button></section>
 <section id="dashboard" class="hidden"><div class="row" style="justify-content:space-between"><div><h2>CONTENT MANAGEMENT</h2><p class="muted">Changes are saved to the connected database and reflected on the public website.</p></div><button id="sign-out">SIGN OUT</button></div><nav id="tabs"></nav><div class="panel"><h3 id="heading"></h3><p id="help" class="muted"></p><div id="visual"></div><details id="advanced" class="advanced"><summary>ADVANCED · JSON EDITOR</summary><p class="muted">For complex product sections and bulk edits. Apply JSON to update the visual editor.</p><textarea id="editor" spellcheck="false" aria-label="Section JSON"></textarea><div class="row"><button id="format">FORMAT JSON</button><button id="apply-json">APPLY JSON</button></div></details><div class="toolbar"><button class="primary" id="save">SAVE & PUBLISH</button><button id="reload">RELOAD</button><button id="import">IMPORT EXISTING SITE DATA</button></div></div></section><p id="notice" role="status"></p></main>
 <script>
@@ -16,7 +16,7 @@ const schemas={
  announcements:[['date','Date'],['title','Title'],['description','Description','long']],
  media:[],support:[],settings:[]
 };
-let draft=null,dirty=false;
+let draft=null,dirty=false,selectedProduct=0;
 const clone=x=>JSON.parse(JSON.stringify(x));
 const defaultValue=s=>['products','faq','changelog','announcements'].includes(s)?[]:{};
 const field=(label,value,change,type='text')=>{
@@ -31,7 +31,7 @@ const action=(label,fn,cls='')=>{const b=document.createElement('button');b.text
 function render(){
  el('login').classList.toggle('hidden',!!token);el('dashboard').classList.toggle('hidden',!token);
  el('tabs').replaceChildren();
- for(const s of sections){const b=action(s.toUpperCase(),()=>{if(s===current)return;if(dirty&&!confirm('Discard unsaved changes?'))return;current=s;dirty=false;draft=clone(content[s]??defaultValue(s));render()});b.classList.toggle('active',s===current);el('tabs').append(b)}
+ for(const s of sections){const b=action(s.toUpperCase(),()=>{if(s===current)return;if(dirty&&!confirm('Discard unsaved changes?'))return;current=s;selectedProduct=0;dirty=false;draft=clone(content[s]??defaultValue(s));render()});b.classList.toggle('active',s===current);el('tabs').append(b)}
  el('heading').textContent=current.toUpperCase();el('help').textContent=help[current];
  if(draft===null)draft=clone(content[current]??defaultValue(current));
  el('editor').value=JSON.stringify(draft,null,2);
@@ -43,10 +43,20 @@ function renderVisual(){
   const toolbar=document.createElement('div');toolbar.className='toolbar';
   toolbar.append(action(current==='faq'?'ADD FAQ GROUP':current==='products'?'ADD PRODUCT':'ADD ENTRY',()=>{
    draft.push(current==='faq'?{title:'New category',questions:[]}:current==='products'?{tag:'NEW-'+Date.now(),name:'New product',price:'',category:'',sections:[]}:current==='changelog'?{date:'',title:'',description:''}:{date:'',title:'',description:''});
-   dirty=true;renderVisual();
+   if(current==='products')selectedProduct=draft.length-1;dirty=true;renderVisual();
   },'primary'));toolbar.append(Object.assign(document.createElement('span'),{className:'subtle',textContent:draft.length+' entries'}));root.append(toolbar);
   if(!draft.length){const e=document.createElement('div');e.className='empty';e.textContent='No entries yet. Click ADD to create one.';root.append(e)}
+  if(current==='products'){
+   const tiles=document.createElement('div');tiles.className='product-list';
+   draft.forEach((p,i)=>{
+    const b=document.createElement('button');b.className='product-tile'+(selectedProduct===i?' selected':'');
+    const img=document.createElement('img');img.alt='';img.loading='lazy';img.src=p.coverUrl||'/assets/covers/'+(p.category==='Firmware'?'firmware':p.name?.toLowerCase().includes('aimbot')?'aimbot':p.name?.toLowerCase().includes('rdma')?'rdma':p.name?.toLowerCase().includes('bios')?'bios':p.name?.toLowerCase().includes('smm')?'valsmm':'spoofer')+'.png';
+    const info=document.createElement('div');info.className='tile-info';const name=document.createElement('strong');name.textContent=p.name||'Untitled';const price=document.createElement('span');price.textContent=p.price||'';info.append(name,price);b.append(img,info);
+    b.onclick=()=>{selectedProduct=i;renderVisual()};tiles.append(b);
+   });root.append(tiles)
+  }
   draft.forEach((item,index)=>{
+   if(current==='products'&&index!==selectedProduct)return;
    const card=document.createElement('article');card.className='entry';
    const h=document.createElement('h4');h.textContent=(index+1)+'. '+(item.name||item.title||'Entry');card.append(h);
    const grid=document.createElement('div');grid.className='entry-grid';
@@ -55,6 +65,18 @@ function renderVisual(){
     if(type==='long')w.className='wide';grid.append(w)
    }
    if(current==='products'){
+    const media=document.createElement('div');media.className='wide';
+    media.append(field('Cover image URL',item.coverUrl||'',v=>{item.coverUrl=v}));
+    const preview=document.createElement('img');preview.className='image-preview';preview.alt='Cover preview';preview.src=item.coverUrl||'/assets/covers/firmware.png';media.append(preview);
+    const upload=document.createElement('input');upload.type='file';upload.accept='image/png,image/jpeg,image/webp';upload.className='upload-input';
+    upload.onchange=async()=>{const file=upload.files?.[0];if(!file)return;if(file.size>2500000){notify('Max image size is 2.5 MB');return}
+     upload.disabled=true;notify('Uploading image…');
+     try{const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=reject;reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.readAsDataURL(file)});
+      const result=await request('/api/upload-image',{method:'POST',body:JSON.stringify({filename:file.name,base64})});
+      item.coverUrl=result.url;dirty=true;renderVisual();notify('Image uploaded. Click SAVE & PUBLISH to update the website.');
+     }catch(e){notify('Upload failed: '+e.message)}finally{upload.disabled=false}
+    };
+    media.append(upload);grid.append(media);
     const extra=field('Technical sections (JSON)',JSON.stringify(item.sections||[],null,2),v=>{try{item.sections=JSON.parse(v);notify('Sections JSON valid.')}catch(e){notify('Sections JSON invalid: '+e.message)}},'long');
     extra.className='wide';grid.append(extra);
     const keys=Object.keys(item).filter(k=>!['tag','name','price','category','subtitle','description','sections'].includes(k));
@@ -69,7 +91,7 @@ function renderVisual(){
    }
    card.append(grid);
    const buttons=document.createElement('div');buttons.className='entry-actions';
-   buttons.append(action('MOVE UP',()=>{if(index===0)return;[draft[index-1],draft[index]]=[draft[index],draft[index-1]];dirty=true;renderVisual()}),action('MOVE DOWN',()=>{if(index===draft.length-1)return;[draft[index+1],draft[index]]=[draft[index],draft[index+1]];dirty=true;renderVisual()}),action('DELETE',()=>{if(!confirm('Delete this entry?'))return;draft.splice(index,1);dirty=true;renderVisual()},'danger'));card.append(buttons);root.append(card)
+   buttons.append(action('MOVE UP',()=>{if(index===0)return;[draft[index-1],draft[index]]=[draft[index],draft[index-1]];dirty=true;renderVisual()}),action('MOVE DOWN',()=>{if(index===draft.length-1)return;[draft[index+1],draft[index]]=[draft[index],draft[index+1]];dirty=true;renderVisual()}),action('DELETE',()=>{if(!confirm('Delete this entry?'))return;draft.splice(index,1);selectedProduct=Math.min(selectedProduct,draft.length-1);dirty=true;renderVisual()},'danger'));card.append(buttons);root.append(card)
   })
  }else if(draft&&typeof draft==='object'){
   const grid=document.createElement('div');grid.className='entry-grid';
