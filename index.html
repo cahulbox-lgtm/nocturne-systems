@@ -426,34 +426,60 @@ update();
 @keyframes ns-pulse{50%{opacity:.25;box-shadow:0 0 2px #fff}}
 @media(max-width:650px){#ns-intro .ns-brand{font-size:8px;letter-spacing:.12em}#ns-intro .ns-overline{font-size:8px;letter-spacing:.23em}#ns-intro .ns-subtitle{font-size:8px;letter-spacing:.12em}#ns-intro .ns-right{display:none}#ns-intro .ns-enter{bottom:120px}}
 @media(prefers-reduced-motion:reduce){#ns-intro *,#ns-intro *:before,#ns-intro *:after{animation:none!important;transition:none!important}#ns-intro .ns-title,#ns-intro .ns-subtitle,#ns-intro .ns-overline{opacity:1;transform:none;filter:none}#ns-intro .ns-enter{opacity:1;pointer-events:auto;transform:translate(-50%,0)}}
+
+#ns-intro .ns-orbit{position:absolute;left:50%;top:50%;width:min(57vw,720px);aspect-ratio:1;border:1px solid #d9e5ff20;border-radius:50%;transform:translate(-50%,-50%) scale(.35);opacity:0;pointer-events:none;box-shadow:0 0 75px #a8c9ff0d,inset 0 0 60px #a8c9ff0a}
+#ns-intro.ns-phase2 .ns-orbit{animation:ns-orbit-grow 2.5s cubic-bezier(.18,.7,.2,1) both}
+#ns-intro .ns-orbit.two{width:min(82vw,1100px);border-style:dashed;border-color:#ffffff12;animation-delay:.3s!important}
+#ns-intro .ns-orbit.three{width:min(43vw,520px);border-color:#ffffff2b;animation-delay:.55s!important}
+#ns-intro .ns-side{position:absolute;top:50%;transform:translateY(-50%);z-index:6;font:9px monospace;letter-spacing:.28em;color:#9ba8b850;writing-mode:vertical-rl;pointer-events:none}
+#ns-intro .ns-side.left{left:clamp(14px,2.5vw,38px);transform:translateY(-50%) rotate(180deg)}
+#ns-intro .ns-side.right{right:clamp(14px,2.5vw,38px)}
+#ns-intro .ns-title{position:relative}
+#ns-intro .ns-title:after{content:"NOCTURNE";position:absolute;left:0;top:0;width:100%;color:#e6f0ff;text-shadow:3px 0 #7f9ec8;opacity:0;pointer-events:none}
+#ns-intro.ns-glitch .ns-title:after{animation:ns-glitch .52s steps(2,end) both}
+#ns-intro.ns-glitch .ns-title{animation:ns-title-shift .52s steps(3,end)}
+#ns-intro .ns-crosshair{position:absolute;left:50%;top:50%;width:15px;height:15px;transform:translate(-50%,-50%);opacity:.2;pointer-events:none}
+#ns-intro .ns-crosshair:before,#ns-intro .ns-crosshair:after{content:"";position:absolute;background:#e3ecff}
+#ns-intro .ns-crosshair:before{width:1px;height:15px;left:7px}
+#ns-intro .ns-crosshair:after{height:1px;width:15px;top:7px}
+#ns-intro .ns-bottom-progress{position:absolute;left:50%;bottom:clamp(73px,9vh,105px);transform:translateX(-50%);width:min(280px,50vw);height:1px;background:#ffffff18;overflow:hidden;pointer-events:none}
+#ns-intro .ns-bottom-progress:after{content:"";display:block;height:100%;width:0;background:#e8f1ff;box-shadow:0 0 15px #fff;animation:ns-progress-v4 3.9s cubic-bezier(.3,.5,.2,1) forwards}
+#ns-intro.ns-ready .ns-bottom-progress{opacity:0;transition:opacity .5s}
+@keyframes ns-orbit-grow{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}45%{opacity:.45}100%{opacity:.25;transform:translate(-50%,-50%) scale(1)}}
+@keyframes ns-glitch{0%,100%{opacity:0;clip-path:inset(0 0 100% 0);transform:translateX(0)}15%{opacity:.8;clip-path:inset(18% 0 62% 0);transform:translateX(8px)}35%{opacity:.6;clip-path:inset(60% 0 17% 0);transform:translateX(-12px)}55%{opacity:.9;clip-path:inset(35% 0 40% 0);transform:translateX(5px)}75%{opacity:.3;clip-path:inset(72% 0 10% 0);transform:translateX(-5px)}}
+@keyframes ns-title-shift{0%,100%{transform:scale(1)}30%{transform:translateX(-3px)}60%{transform:translateX(3px)}}
+@keyframes ns-progress-v4{to{width:100%}}
+@media(max-width:650px){#ns-intro .ns-side{display:none}#ns-intro .ns-orbit{width:85vw}#ns-intro .ns-orbit.two{width:120vw}#ns-intro .ns-orbit.three{width:65vw}}
+@media(prefers-reduced-motion:reduce){#ns-intro .ns-orbit{opacity:.2;transform:translate(-50%,-50%) scale(1)}#ns-intro .ns-bottom-progress{display:none}}
 </style>
 <script>
 (function(){
  const params=new URLSearchParams(location.search),force=params.get('intro')==='1';
  try{if(!force&&sessionStorage.getItem('nocturne-intro-seen')==='1')return}catch(e){}
  const root=document.createElement('div');root.id='ns-intro';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label','Nocturne Systems introduction');
- root.innerHTML='<canvas class="ns-canvas" aria-hidden="true"></canvas><div class="ns-vignette"></div><div class="ns-grain"></div><div class="ns-corners"></div><div class="ns-header"><div class="ns-brand"><span class="ns-brand-mark"></span>NOCTURNE / SYSTEMS</div><button type="button" class="ns-skip">SKIP INTRO ↗</button></div><div class="ns-main"><div class="ns-overline">A NEW ERA BEGINS</div><h1 class="ns-title">NOCTURNE<span>SYSTEMS</span></h1><div class="ns-subtitle">BEYOND THE ORDINARY.</div></div><button type="button" class="ns-enter">ENTER NOCTURNE ↗</button><div class="ns-footer"><div class="ns-status" aria-live="polite">INITIALIZING</div><div class="ns-right">N / S &nbsp; // &nbsp; EXPERIENCE 003</div></div><div class="ns-flash"></div>';
+ root.innerHTML='<canvas class="ns-canvas" aria-hidden="true"></canvas><div class="ns-vignette"></div><div class="ns-orbit"></div><div class="ns-orbit two"></div><div class="ns-orbit three"></div><div class="ns-crosshair"></div><div class="ns-side left">NOCTURNE // SINGULARITY</div><div class="ns-side right">EXPERIENCE VERSION 004</div><div class="ns-grain"></div><div class="ns-corners"></div><div class="ns-header"><div class="ns-brand"><span class="ns-brand-mark"></span>NOCTURNE / SYSTEMS</div><button type="button" class="ns-skip">SKIP INTRO ↗</button></div><div class="ns-main"><div class="ns-overline">A NEW ERA BEGINS</div><h1 class="ns-title">NOCTURNE<span>SYSTEMS</span></h1><div class="ns-subtitle">BEYOND THE ORDINARY.</div></div><button type="button" class="ns-enter">ENTER NOCTURNE ↗</button><div class="ns-footer"><div class="ns-status" aria-live="polite">INITIALIZING</div><div class="ns-right">N / S &nbsp; // &nbsp; EXPERIENCE 004</div></div><div class="ns-bottom-progress"></div><div class="ns-flash"></div>';
  document.body.append(root);
  const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d',{alpha:false}),status=root.querySelector('.ns-status'),enter=root.querySelector('.ns-enter'),skip=root.querySelector('.ns-skip');
  const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- let w=0,h=0,dpr=1,raf=0,closed=false,ready=false;
+ let w=0,h=0,dpr=1,raf=0,closed=false,ready=false,mouseX=0,mouseY=0;
  const timers=[];const later=(fn,ms)=>timers.push(setTimeout(fn,ms));
  const previousFocus=document.activeElement;
  const resize=()=>{dpr=Math.min(window.devicePixelRatio||1,2);w=window.innerWidth;h=window.innerHeight;canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)};
  resize();window.addEventListener('resize',resize);
- const particles=Array.from({length:180},()=>({x:Math.random()*2-1,y:Math.random()*2-1,z:.08+Math.random()*.92,speed:.45+Math.random()*.8}));
+ const move=e=>{mouseX=(e.clientX/window.innerWidth-.5)*2;mouseY=(e.clientY/window.innerHeight-.5)*2};window.addEventListener('pointermove',move,{passive:true});
+ const particles=Array.from({length:260},()=>({x:Math.random()*2-1,y:Math.random()*2-1,z:.08+Math.random()*.92,speed:.45+Math.random()*.8}));
  let last=performance.now(),elapsed=0;
  function draw(now){
   if(closed)return;
   const dt=Math.min((now-last)/1000,.05);last=now;elapsed+=dt;
   ctx.fillStyle='#030406';ctx.fillRect(0,0,w,h);
-  const cx=w/2,cy=h/2;const intensity=Math.min(1,elapsed/3.2);
+  const cx=w/2+mouseX*22,cy=h/2+mouseY*14;const intensity=Math.min(1,elapsed/3.2);
   const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(w,h)*.48);
   glow.addColorStop(0,'rgba(207,225,255,'+(.13+intensity*.13)+')');glow.addColorStop(.18,'rgba(78,100,135,.12)');glow.addColorStop(1,'rgba(0,0,0,0)');
   ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
   ctx.save();ctx.translate(cx,cy);
   for(const p of particles){
-   p.z-=dt*(.12+intensity*.45)*p.speed;
+   p.z-=dt*(.12+intensity*.62)*p.speed;
    if(p.z<.035){p.z=1;p.x=Math.random()*2-1;p.y=Math.random()*2-1}
    const depth=1/p.z;const x=p.x*depth*w*.16,y=p.y*depth*h*.22;
    const x0=p.x/(p.z+.028)*w*.16,y0=p.y/(p.z+.028)*h*.22;
@@ -466,7 +492,7 @@ update();
   raf=requestAnimationFrame(draw);
  }
  function close(){
-  if(closed)return;closed=true;timers.forEach(clearTimeout);cancelAnimationFrame(raf);window.removeEventListener('resize',resize);document.removeEventListener('keydown',key);
+  if(closed)return;closed=true;timers.forEach(clearTimeout);cancelAnimationFrame(raf);window.removeEventListener('resize',resize);window.removeEventListener('pointermove',move);document.removeEventListener('keydown',key);
   try{sessionStorage.setItem('nocturne-intro-seen','1')}catch(e){}
   root.classList.add('ns-exit');setTimeout(()=>{root.remove();if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus({preventScroll:true})},1200);
  }
@@ -483,6 +509,8 @@ update();
  if(ctx)raf=requestAnimationFrame(draw);
  later(()=>root.classList.add('ns-phase1'),550);
  later(()=>root.classList.add('ns-phase2'),1250);
+ later(()=>root.classList.add('ns-glitch'),2050);
+ later(()=>root.classList.remove('ns-glitch'),2650);
  later(()=>{root.classList.add('ns-phase3');status.textContent='SYSTEMS SYNCHRONIZED'},2700);
  later(()=>{root.classList.add('ns-ready');status.textContent='SYSTEM ONLINE // ACCESS GRANTED';ready=true},3900);
 })();
