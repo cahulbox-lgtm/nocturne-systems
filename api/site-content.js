@@ -1,6 +1,6 @@
 const ALLOWED = new Set(['products','changelog','faq','support','announcements','media','settings']);
 const json = (res,status,body) => {res.status(status).setHeader('Content-Type','application/json; charset=utf-8').setHeader('Cache-Control','no-store');res.end(JSON.stringify(body));};
-const config=()=>({url:process.env.SUPABASE_URL,key:process.env.SUPABASE_SERVICE_ROLE_KEY});
+const config=()=>({url:((process.env.SUPABASE_URL||process.env.SUPABASE_SUPABASE_URL)||process.env.SUPABASE_SUPABASE_URL),key:(process.env.SUPABASE_SERVICE_ROLE_KEY||process.env.SUPABASE_SUPABASE_SERVICE_ROLE_KEY)});
 async function db(method,path,body){
  const {url,key}=config();if(!url||!key)throw new Error('Database not configured');
  const r=await fetch(url.replace(/\/$/,'')+'/rest/v1/'+path,{method,headers:{apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=representation'},body:body?JSON.stringify(body):undefined});
@@ -8,8 +8,8 @@ async function db(method,path,body){
 }
 async function isAdmin(req){
  const token=(req.headers.authorization||'').replace(/^Bearer\s+/i,'');
- if(!token||!process.env.ADMIN_EMAIL||!process.env.SUPABASE_URL||!process.env.SUPABASE_ANON_KEY)return false;
- const r=await fetch(process.env.SUPABASE_URL.replace(/\/$/,'')+'/auth/v1/user',{headers:{apikey:process.env.SUPABASE_ANON_KEY,Authorization:'Bearer '+token}});
+ if(!token||!process.env.ADMIN_EMAIL||!(process.env.SUPABASE_URL||process.env.SUPABASE_SUPABASE_URL)||!(process.env.SUPABASE_ANON_KEY||process.env.SUPABASE_SUPABASE_PUBLISHABLE_KEY||process.env.NEXT_PUBLIC_SUPABASE_SUPABASE_ANON_KEY))return false;
+ const r=await fetch((process.env.SUPABASE_URL||process.env.SUPABASE_SUPABASE_URL).replace(/\/$/,'')+'/auth/v1/user',{headers:{apikey:(process.env.SUPABASE_ANON_KEY||process.env.SUPABASE_SUPABASE_PUBLISHABLE_KEY||process.env.NEXT_PUBLIC_SUPABASE_SUPABASE_ANON_KEY),Authorization:'Bearer '+token}});
  if(!r.ok)return false;const u=await r.json();return !!u.email&&u.email.toLowerCase()===process.env.ADMIN_EMAIL.toLowerCase()&&!!u.email_confirmed_at;
 }
 export default async function handler(req,res){
