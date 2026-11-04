@@ -457,9 +457,9 @@ update();
  const params=new URLSearchParams(location.search),force=params.get('intro')==='1';
  try{if(!force&&sessionStorage.getItem('nocturne-intro-seen')==='1')return}catch(e){}
  const root=document.createElement('div');root.id='ns-intro';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label','Nocturne Systems introduction');
- root.innerHTML='<canvas class="ns-canvas" aria-hidden="true"></canvas><div class="ns-vignette"></div><div class="ns-orbit"></div><div class="ns-orbit two"></div><div class="ns-orbit three"></div><div class="ns-crosshair"></div><div class="ns-side left">NOCTURNE // SINGULARITY</div><div class="ns-side right">EXPERIENCE VERSION 004</div><div class="ns-grain"></div><div class="ns-corners"></div><div class="ns-header"><div class="ns-brand"><span class="ns-brand-mark"></span>NOCTURNE / SYSTEMS</div><button type="button" class="ns-skip">SKIP INTRO ↗</button></div><div class="ns-main"><div class="ns-overline">A NEW ERA BEGINS</div><h1 class="ns-title">NOCTURNE<span>SYSTEMS</span></h1><div class="ns-subtitle">BEYOND THE ORDINARY.</div></div><button type="button" class="ns-enter">ENTER NOCTURNE ↗</button><div class="ns-footer"><div class="ns-status" aria-live="polite">INITIALIZING</div><div class="ns-right">N / S &nbsp; // &nbsp; EXPERIENCE 004</div></div><div class="ns-bottom-progress"></div><div class="ns-flash"></div>';
+ root.innerHTML='<canvas class="ns-canvas ns-webgl" aria-hidden="true"></canvas><canvas class="ns-canvas ns-fallback" aria-hidden="true"></canvas><div class="ns-vignette"></div><div class="ns-orbit"></div><div class="ns-orbit two"></div><div class="ns-orbit three"></div><div class="ns-crosshair"></div><div class="ns-side left">NOCTURNE // SINGULARITY</div><div class="ns-side right">EXPERIENCE VERSION 005</div><div class="ns-grain"></div><div class="ns-corners"></div><div class="ns-header"><div class="ns-brand"><span class="ns-brand-mark"></span>NOCTURNE / SYSTEMS</div><button type="button" class="ns-skip">SKIP INTRO ↗</button></div><div class="ns-main"><div class="ns-overline">A NEW ERA BEGINS</div><h1 class="ns-title">NOCTURNE<span>SYSTEMS</span></h1><div class="ns-subtitle">BEYOND THE ORDINARY.</div></div><button type="button" class="ns-enter">ENTER NOCTURNE ↗</button><div class="ns-footer"><div class="ns-status" aria-live="polite">INITIALIZING</div><div class="ns-right">N / S &nbsp; // &nbsp; EXPERIENCE 005</div></div><div class="ns-bottom-progress"></div><div class="ns-flash"></div>';
  document.body.append(root);
- const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d',{alpha:false}),status=root.querySelector('.ns-status'),enter=root.querySelector('.ns-enter'),skip=root.querySelector('.ns-skip');
+ const canvas=root.querySelector('.ns-fallback'),ctx=canvas.getContext('2d',{alpha:false}),status=root.querySelector('.ns-status'),enter=root.querySelector('.ns-enter'),skip=root.querySelector('.ns-skip');
  const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  let w=0,h=0,dpr=1,raf=0,closed=false,ready=false,mouseX=0,mouseY=0;
  const timers=[];const later=(fn,ms)=>timers.push(setTimeout(fn,ms));
@@ -467,6 +467,70 @@ update();
  const resize=()=>{dpr=Math.min(window.devicePixelRatio||1,2);w=window.innerWidth;h=window.innerHeight;canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)};
  resize();window.addEventListener('resize',resize);
  const move=e=>{mouseX=(e.clientX/window.innerWidth-.5)*2;mouseY=(e.clientY/window.innerHeight-.5)*2};window.addEventListener('pointermove',move,{passive:true});
+
+ // Actual GPU-rendered perspective corridor; 2D canvas remains a fallback.
+ const gpuCanvas=root.querySelector('.ns-webgl');
+ let gl=null,gpuFrame=0,gpuCleanup=()=>{};
+ if(!reduced){
+ try{
+  gl=gpuCanvas.getContext('webgl',{alpha:false,antialias:false,depth:false,stencil:false,powerPreference:'low-power'});
+  if(gl){
+   const vertex='attribute vec2 a_position;void main(){gl_Position=vec4(a_position,0.0,1.0);}';
+   const fragment=String.raw`precision mediump float;
+uniform vec2 u_resolution;
+uniform float u_time;
+uniform vec2 u_mouse;
+float line(float x,float w){return exp(-abs(x)/max(w,.00001));}
+void main(){
+ vec2 uv=(gl_FragCoord.xy-.5*u_resolution)/min(u_resolution.x,u_resolution.y);
+ vec2 mouse=u_mouse*.12;
+ vec2 p=uv-mouse;
+ float t=u_time;
+ float r=length(p);
+ vec3 color=vec3(.006,.008,.013);
+ float depth=0.0;
+ for(int i=0;i<15;i++){
+  float z=fract(float(i)/15.0+t*.19);
+  float scale=mix(.05,2.6,pow(z,2.4));
+  vec2 q=abs(p)/scale;
+  float edge=min(abs(q.x-1.0),abs(q.y-.64));
+  float inside=step(q.x,1.0)*step(q.y,.64);
+  float rectangular=line(edge,.007+z*.006)*inside;
+  float fade=pow(z,1.8)*(1.0-smoothstep(.86,1.0,z));
+  depth+=rectangular*fade*.48;
+ }
+ color+=vec3(.37,.49,.66)*depth;
+ float core=exp(-r*r*24.0)*(.17+.06*sin(t*2.0));
+ color+=vec3(.47,.57,.73)*core;
+ float ring=exp(-pow((r-(fract(t*.22)*1.8)),2.0)*260.0)*(1.0-fract(t*.22));
+ color+=vec3(.3,.42,.57)*ring*.23;
+ float scan=sin((p.y+t*.015)*u_resolution.y*.6)*.003;
+ color+=vec3(scan);
+ float vignette=1.0-smoothstep(.2,1.2,r);
+ color*=vignette;
+ gl_FragColor=vec4(pow(max(color,vec3(0.0)),vec3(.88)),1.0);
+}`;
+   const compile=(type,source)=>{const shader=gl.createShader(type);gl.shaderSource(shader,source);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(shader));return shader};
+   const vs=compile(gl.VERTEX_SHADER,vertex),fs=compile(gl.FRAGMENT_SHADER,fragment),program=gl.createProgram();
+   gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);
+   if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
+   const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+   gl.useProgram(program);const pos=gl.getAttribLocation(program,'a_position');gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+   const res=gl.getUniformLocation(program,'u_resolution'),time=gl.getUniformLocation(program,'u_time'),mouse=gl.getUniformLocation(program,'u_mouse');
+   const start=performance.now();
+   const render=now=>{
+    if(closed)return;
+    const width=Math.min(Math.floor(window.innerWidth*Math.min(devicePixelRatio||1,1.5)),1920),height=Math.min(Math.floor(window.innerHeight*Math.min(devicePixelRatio||1,1.5)),1080);
+    if(gpuCanvas.width!==width||gpuCanvas.height!==height){gpuCanvas.width=width;gpuCanvas.height=height;gl.viewport(0,0,width,height)}
+    gl.uniform2f(res,width,height);gl.uniform1f(time,(now-start)/1000);gl.uniform2f(mouse,mouseX,mouseY);
+    gl.drawArrays(gl.TRIANGLES,0,6);gpuFrame=requestAnimationFrame(render);
+   };
+   canvas.style.display='none';gpuFrame=requestAnimationFrame(render);
+   gpuCleanup=()=>{cancelAnimationFrame(gpuFrame);gl.deleteBuffer(buffer);gl.deleteProgram(program);gl.deleteShader(vs);gl.deleteShader(fs)};
+   gpuCanvas.addEventListener('webglcontextlost',e=>{e.preventDefault();gpuCleanup();gpuCleanup=()=>{};gpuCanvas.style.display='none';canvas.style.display='block';if(!closed)raf=requestAnimationFrame(draw)},{once:true});
+  }
+ }catch(err){console.warn('WebGL intro fallback:',err);gpuCanvas.style.display='none';gl=null}
+ }else gpuCanvas.style.display='none';
  const particles=Array.from({length:260},()=>({x:Math.random()*2-1,y:Math.random()*2-1,z:.08+Math.random()*.92,speed:.45+Math.random()*.8}));
  let last=performance.now(),elapsed=0;
  function draw(now){
@@ -492,7 +556,7 @@ update();
   raf=requestAnimationFrame(draw);
  }
  function close(){
-  if(closed)return;closed=true;timers.forEach(clearTimeout);cancelAnimationFrame(raf);window.removeEventListener('resize',resize);window.removeEventListener('pointermove',move);document.removeEventListener('keydown',key);
+  if(closed)return;closed=true;timers.forEach(clearTimeout);cancelAnimationFrame(raf);gpuCleanup();window.removeEventListener('resize',resize);window.removeEventListener('pointermove',move);document.removeEventListener('keydown',key);
   try{sessionStorage.setItem('nocturne-intro-seen','1')}catch(e){}
   root.classList.add('ns-exit');setTimeout(()=>{root.remove();if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus({preventScroll:true})},1200);
  }
@@ -506,7 +570,7 @@ update();
  document.addEventListener('keydown',key);skip.addEventListener('click',close);enter.addEventListener('click',close);
  skip.focus({preventScroll:true});
  if(reduced){root.classList.add('ns-phase1','ns-phase2','ns-phase3','ns-ready');status.textContent='SYSTEM ONLINE';ready=true;return}
- if(ctx)raf=requestAnimationFrame(draw);
+ if(ctx&&!gl)raf=requestAnimationFrame(draw);
  later(()=>root.classList.add('ns-phase1'),550);
  later(()=>root.classList.add('ns-phase2'),1250);
  later(()=>root.classList.add('ns-glitch'),2050);
