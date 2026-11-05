@@ -135,10 +135,10 @@ function getProductStatus(name){const item=productStatuses[name]||{status:'undet
 function statusMarkup(name){const s=getProductStatus(name);const labels={online:'ONLINE',updating:'UPDATING',maintenance:'MAINTENANCE',unverified:'STATUS NOT VERIFIED',undetected:'UNDETECTED'};return `<div class="ns-status" title="${esc(s.checked?'Status updated: '+s.checked:'Manually assigned status; not automatically verified')}"><i class="ns-status-dot ${s.status}"></i>${labels[s.status]}${s.checked?' · '+esc(s.checked):''}</div>`}
 function nsCoverFor(p){
  const n=(p.name||'').toLowerCase(),c=(p.category||'').toLowerCase();
- if(n==='faceit esp')return {url:'assets/covers/faceit-esp.png',label:'07 / FACEIT ESP'};
+ if(n==='faceit esp')return {url:'assets/covers/hardware-cb.png',label:'07 / FACEIT ESP'};
  if(n==='valorant colorbot')return {url:'assets/covers/valorant-colorbot.png',label:'08 / COLORBOT'};
  if(n==='valorant triggerbot')return {url:'assets/covers/valorant-triggerbot.png',label:'09 / TRIGGERBOT'};
- if(n==='external hardware colorbot')return {url:'assets/covers/hardware-cb.png',label:'10 / HARDWARE CB'};
+ if(n==='external hardware colorbot')return {url:'assets/covers/faceit-esp.png',label:'10 / HARDWARE CB'};
  if(c==='firmware')return {url:'assets/covers/firmware.png',label:'01 / FIRMWARE'};
  if(n.includes('aimbot'))return {url:'assets/covers/aimbot.png',label:'02 / AI AIMBOT'};
  if(n.includes('woofer')||n.includes('woof')||n.includes('spoofer'))return {url:'assets/covers/spoofer.png',label:'03 / SPOOFER'};
