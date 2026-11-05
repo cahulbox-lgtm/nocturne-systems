@@ -187,7 +187,7 @@ function nsPricingOptions(p){
   for(const raw of section[1]||[]){
    const line=String(raw).trim();
    // Match published monetary amounts, without converting them or inventing tiers.
-   const amount=line.match(/\$\s*([0-9]+(?:\.[0-9]{1,2})?)/);
+   const amount=line.match(/([$€£])\s*([0-9]+(?:\.[0-9]{1,2})?)/);
    if(!amount)continue;
    let label=line.slice(0,amount.index).replace(/[—–:()\-\s]+$/g,'').replace(/^\s*[—–:()\-]+/g,'').trim();
    let suffix=line.slice(amount.index+amount[0].length).replace(/^[)\s—–:]+/,'').trim();
@@ -196,7 +196,7 @@ function nsPricingOptions(p){
     const access=after.match(/(?:LIFETIME|MONTHLY|WEEKLY|DAILY|YEARLY|SETUP|EAC ONLY|VGK ONLY)/i);
     label=access?access[0]:'PRICE';
    }
-   const price='$'+amount[1];
+   const price=amount[1]+amount[2];
    if(!result.some(x=>x.label.toLowerCase()===label.toLowerCase()&&x.price===price)){
     result.push({label,price,description:suffix});
    }
