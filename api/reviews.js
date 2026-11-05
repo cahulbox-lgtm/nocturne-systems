@@ -15,7 +15,17 @@ export default async function handler(req, res) {
   if (!process.env.DISCORD_BOT_TOKEN) return res.status(503).json({error:'Discord integration is not configured'});
   if (cache.data && Date.now() < cache.expires) return res.status(200).json(cache.data);
   try {
-    const raw = await discord(`/channels/${CHANNEL_ID}/messages?limit=50`);
+    // Page through the channel history instead of stopping at the latest 50 messages.
+    // Discord returns at most 100 messages per request.
+    const raw = [];
+    let before = '';
+    for (let page = 0; page < 20; page++) {
+      const batch = await discord(`/channels/${CHANNEL_ID}/messages?limit=100${before ? '&before=' + encodeURIComponent(before) : ''}`);
+      if (!batch.length) break;
+      raw.push(...batch);
+      before = batch[batch.length - 1].id;
+      if (batch.length < 100) break;
+    }
     const visible = raw.filter(m => !m.author?.bot && !m.webhook_id && (m.content?.trim() || m.attachments?.length));
     const channelIds = new Set(), roleIds = new Set(), userIds = new Set();
     for (const m of visible) {
@@ -52,7 +62,7 @@ export default async function handler(req, res) {
       url: `https://discord.com/channels/${GUILD_ID}/${CHANNEL_ID}/${m.id}`,
       attachments: (m.attachments || []).slice(0,4).map(a => ({ url:a.url, name:a.filename || 'Attachment', image:!!a.content_type?.startsWith('image/') }))
     }));
-    const data = { reviews, updatedAt: new Date().toISOString() };
+    const data = { reviews, updatedAt: new Date().toISOString(), truncated: raw.length >= 2000 };
     cache = { data, expires: Date.now() + 20000 };
     return res.status(200).json(data);
   } catch (e) {
