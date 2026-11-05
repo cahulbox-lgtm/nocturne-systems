@@ -411,7 +411,11 @@ update();
   const r=await fetch('/api/site-content',{cache:'no-store'});if(!r.ok)return;
   const {content:c}=await r.json();if(!c)return;
   if(Array.isArray(c.products)&&c.products.length&&typeof products!=='undefined'){
-   products.splice(0,products.length,...c.products);if(typeof draw==='function')draw();
+   const featuredNames=new Set(['FACEIT ESP','VALORANT COLORBOT','VALORANT TRIGGERBOT','EXTERNAL HARDWARE COLORBOT']);
+   const featured=products.filter(p=>featuredNames.has(p.name));
+   const merged=[...c.products];
+   for(const p of featured){if(!merged.some(item=>item.name===p.name))merged.push(p)}
+   products.splice(0,products.length,...merged);if(typeof draw==='function')draw();
   }
   if(Array.isArray(c.changelog)){
    const list=document.getElementById('ns-update-list');
