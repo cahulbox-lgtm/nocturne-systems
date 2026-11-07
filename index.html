@@ -107,6 +107,22 @@
 @keyframes ns-review-scroll{from{transform:translateX(0)}to{transform:translateX(calc(-1 * var(--ns-loop-distance, 1000px)))}}
 @media(max-width:650px){.ns-vouches-marquee{padding:72px 0 58px}.ns-vouches-marquee .review{flex-basis:275px;width:275px;min-height:200px;padding:17px}.ns-marquee-viewport{margin-top:34px}.ns-reviews-heading h2{font-size:36px}}
 @media(prefers-reduced-motion:reduce){.ns-vouches-marquee .reviews-list.ns-marquee-active{animation:none!important}.ns-marquee-viewport{overflow-x:auto;mask-image:none;-webkit-mask-image:none}.ns-vouches-marquee .reviews-list{width:max-content}}
+
+/* Premium license selector */
+.ns-pricing-shell{padding:20px;border:1px solid #353840;background:linear-gradient(125deg,#111318,#090a0d 65%,#16181d);position:relative;overflow:hidden}
+.ns-pricing-shell:after{content:"";position:absolute;width:230px;height:230px;right:-110px;bottom:-160px;pointer-events:none;background:radial-gradient(circle,#fff2,transparent 70%)}
+.ns-pricing-subtitle{margin:0 0 15px;color:#aeb1bd;font-size:12px}
+.ns-pricing-shell .ns-price-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.ns-pricing-shell .ns-price-tabs button{cursor:pointer;border:1px solid #51545e;padding:11px 17px;background:#17191e;color:#eee;letter-spacing:.07em;font-size:11px;transition:background .2s,border-color .2s}
+.ns-pricing-shell .ns-price-tabs button:hover{border-color:#fff}
+.ns-pricing-shell .ns-price-tabs button[aria-pressed=true]{background:#f3f3f5;color:#111;border-color:#f3f3f5}
+.ns-pricing-card{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:24px;border:1px solid #51545e;background:linear-gradient(115deg,#16181d,#08090b);position:relative;z-index:1}
+.ns-pricing-main{min-width:0}.ns-pricing-label{display:block;color:#f5f5f7;font-size:13px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.ns-pricing-card .ns-price-detail{margin:9px 0 4px;line-height:1.05;color:#fff}.ns-pricing-card .ns-price-detail strong{font-size:clamp(38px,5vw,66px);font-weight:950;letter-spacing:-.055em}
+.ns-pricing-desc{color:#aeb1bd;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.ns-pricing-action{display:flex;flex-direction:column;align-items:flex-end;gap:12px;flex-shrink:0}.ns-pricing-action span{font-size:9px;letter-spacing:.14em;color:#8f939d}
+.ns-pricing-action .btn{font-size:12px;padding:17px 26px;white-space:nowrap}
+@media(max-width:620px){.ns-pricing-shell{padding:12px}.ns-pricing-card{flex-direction:column;align-items:stretch;padding:18px}.ns-pricing-action{align-items:stretch}.ns-pricing-action .btn{text-align:center}.ns-pricing-action span{display:none}}
 </style><style>
 .ns-faq-section .faq{max-width:1120px}.ns-faq-section h2{font-size:clamp(32px,5vw,58px);letter-spacing:-.055em;line-height:1.05;margin:12px 0 26px}
 .ns-faq-tabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}.ns-faq-tab{border:1px solid #404148;border-radius:100px;background:transparent;color:#c9c9ce;padding:10px 16px;font-size:12px;font-weight:700;transition:background .2s,color .2s,border-color .2s}
@@ -308,7 +324,9 @@ function nsProductExtras(p){
   ? `<div class="ns-gallery-main" id="ns-gallery-main"><img src="${esc(media[0].url)}" alt="${esc(media[0].alt||p.name+' product media')}" loading="lazy"></div><div class="ns-media-tabs">${media.map((m,i)=>`<button type="button" data-ns-media="${i}" aria-pressed="${i===0}">${esc(m.label||'MEDIA '+(i+1))}</button>`).join('')}</div>`
   : `<div class="ns-gallery-main"><img src="visual.png" alt="Nocturne Systems decorative artwork" loading="lazy"></div><p class="ns-gallery-note">Brand artwork · Product screenshots and demonstrations have not been uploaded.</p>`;
  const options=nsPricingOptions(p);
- const priceMarkup=`<div class="ns-price-tabs">${options.map((opt,i)=>`<button type="button" data-ns-price="${i}" aria-pressed="${i===0}">${esc(opt.label)}</button>`).join('')}</div><div class="ns-price-detail" id="ns-price-detail"><strong>${esc(options[0].price)}</strong>${options[0].description?' · '+esc(options[0].description):''}</div>`;
+ const first=options[0];
+ const priceMarkup=`<div class="ns-pricing-shell"><p class="ns-pricing-subtitle">Choose your license option</p><div class="ns-price-tabs" role="group" aria-label="License options">${options.map((opt,i)=>`<button type="button" data-ns-price="${i}" aria-pressed="${i===0}">${esc(opt.label)}</button>`).join('')}</div><div class="ns-pricing-card"><div class="ns-pricing-main"><span class="ns-pricing-label" id="ns-pricing-label">${esc(first.label)}</span><div class="ns-price-detail" id="ns-price-detail"><strong>${esc(first.price)}</strong></div><div class="ns-pricing-desc" id="ns-pricing-desc">${esc(first.description||'License option')}</div></div><div class="ns-pricing-action"><span>NOCTURNE SYSTEMS / LICENSE</span><a href="#support" class="btn primary" id="supportLink">PURCHASE ↗</a></div></div></div>`;
+
  const history=nsProductHistory[p.name]||[];
  const historyMarkup=history.length?history.map(item=>`<div class="ns-history-entry"><time>${esc(item.date||'')}</time><h4>${esc(item.title||'Update')}</h4><p>${esc(item.description||'')}</p></div>`).join(''):'<p class="ns-history-empty">No product-specific updates have been published yet.</p>';
  return `<section class="ns-extra"><h3>PRODUCT SHOWCASE</h3>${mediaMarkup}</section><section class="ns-extra"><h3>LICENSE & PRICING OPTIONS</h3>${priceMarkup}</section>`;
@@ -324,15 +342,18 @@ function nsWireExtras(p){
  }));
  const opts=nsPricingOptions(p);
  const detail=document.getElementById('ns-price-detail');
+ const label=document.getElementById('ns-pricing-label');
+ const description=document.getElementById('ns-pricing-desc');
  document.querySelectorAll('[data-ns-price]').forEach(btn=>btn.addEventListener('click',()=>{
   const o=opts[Number(btn.dataset.nsPrice)];if(!o||!detail)return;
   detail.replaceChildren();const strong=document.createElement('strong');strong.textContent=o.price;detail.append(strong);
-  if(o.description)detail.append(document.createTextNode(' · '+o.description));
+  if(label)label.textContent=o.label;
+  if(description)description.textContent=o.description||'License option';
   document.querySelectorAll('[data-ns-price]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
  }));
 }
 
-function show(i,parent){let p=products[i];const group=parent||(p.category==='Firmware'?'firmware':null);content.innerHTML=`${group?`<button class="firmware-back" id="groupBack">← ALL ${esc(groupDefs[group].title.toUpperCase())}</button>`:''}<span class="cat">${esc(p.category)} / ${esc(p.tag||'NOCTURNE SYSTEMS')}</span><h2>${esc(p.name)}</h2><div class="desc">${esc(p.subtitle)}</div>${statusMarkup(p.name)}<div class="detailsrow"><div class="pill">PRICE: ${esc(p.price)}</div><div class="pill">CATEGORY: ${esc(p.category)}</div></div>${p.sections.map(([heading,items])=>`<section class="detailsection"><h3>${esc(heading)}</h3><ul>${items.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></section>`).join('')}${p.packages?p.packages.map(pkg=>`<section class="detailsection"><h3>${esc(pkg.name)} — ${esc(pkg.price)}</h3><p class="desc">${esc(pkg.subtitle)}</p>${pkg.sections.map(([heading,items])=>`<h4>${esc(heading)}</h4><ul>${items.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>`).join('')}</section>`).join(''):''}${nsProductExtras(p)}<p class="fineprint">Product specifications and claims are seller-provided. Confirm current details, compatibility and availability with the seller before purchase.</p><a href="#support" class="btn primary" id="supportLink">PURCHASE ↗</a><section class="ns-extra"><h3>PRODUCT UPDATE HISTORY</h3>${(nsProductHistory[p.name]||[]).length?(nsProductHistory[p.name]||[]).map(item=>`<div class="ns-history-entry"><time>${esc(item.date||'')}</time><h4>${esc(item.title||'Update')}</h4><p>${esc(item.description||'')}</p></div>`).join(''):'<p class="ns-history-empty">No product-specific updates have been published yet.</p>'}</section>`;modal.classList.add('open');document.body.style.overflow='hidden';document.getElementById('supportLink').onclick=close;nsWireExtras(p);if(group)document.getElementById('groupBack').onclick=()=>showGroup(group)}
+function show(i,parent){let p=products[i];const group=parent||(p.category==='Firmware'?'firmware':null);content.innerHTML=`${group?`<button class="firmware-back" id="groupBack">← ALL ${esc(groupDefs[group].title.toUpperCase())}</button>`:''}<span class="cat">${esc(p.category)} / ${esc(p.tag||'NOCTURNE SYSTEMS')}</span><h2>${esc(p.name)}</h2><div class="desc">${esc(p.subtitle)}</div>${statusMarkup(p.name)}<div class="detailsrow"><div class="pill">PRICE: ${esc(p.price)}</div><div class="pill">CATEGORY: ${esc(p.category)}</div></div>${p.sections.map(([heading,items])=>`<section class="detailsection"><h3>${esc(heading)}</h3><ul>${items.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></section>`).join('')}${p.packages?p.packages.map(pkg=>`<section class="detailsection"><h3>${esc(pkg.name)} — ${esc(pkg.price)}</h3><p class="desc">${esc(pkg.subtitle)}</p>${pkg.sections.map(([heading,items])=>`<h4>${esc(heading)}</h4><ul>${items.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>`).join('')}</section>`).join(''):''}${nsProductExtras(p)}<p class="fineprint">Product specifications and claims are seller-provided. Confirm current details, compatibility and availability with the seller before purchase.</p><section class="ns-extra"><h3>PRODUCT UPDATE HISTORY</h3>${(nsProductHistory[p.name]||[]).length?(nsProductHistory[p.name]||[]).map(item=>`<div class="ns-history-entry"><time>${esc(item.date||'')}</time><h4>${esc(item.title||'Update')}</h4><p>${esc(item.description||'')}</p></div>`).join(''):'<p class="ns-history-empty">No product-specific updates have been published yet.</p>'}</section>`;modal.classList.add('open');document.body.style.overflow='hidden';document.getElementById('supportLink').onclick=close;nsWireExtras(p);if(group)document.getElementById('groupBack').onclick=()=>showGroup(group)}
 function close(){modal.classList.remove('open');document.body.style.overflow=''}document.getElementById('close').onclick=close;modal.onclick=e=>{if(e.target===modal)close()};document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});search.oninput=draw;drawFilters();draw();
 
 (function(){
