@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/product/:slug",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/collection/:slug",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/support",
+      "destination": "/index.html"
+    }
+  ]
+}
