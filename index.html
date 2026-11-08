@@ -108,21 +108,26 @@
 @media(max-width:650px){.ns-vouches-marquee{padding:72px 0 58px}.ns-vouches-marquee .review{flex-basis:275px;width:275px;min-height:200px;padding:17px}.ns-marquee-viewport{margin-top:34px}.ns-reviews-heading h2{font-size:36px}}
 @media(prefers-reduced-motion:reduce){.ns-vouches-marquee .reviews-list.ns-marquee-active{animation:none!important}.ns-marquee-viewport{overflow-x:auto;mask-image:none;-webkit-mask-image:none}.ns-vouches-marquee .reviews-list{width:max-content}}
 
-/* Premium license selector */
-.ns-pricing-shell{padding:20px;border:1px solid #353840;background:linear-gradient(125deg,#111318,#090a0d 65%,#16181d);position:relative;overflow:hidden}
-.ns-pricing-shell:after{content:"";position:absolute;width:230px;height:230px;right:-110px;bottom:-160px;pointer-events:none;background:radial-gradient(circle,#fff2,transparent 70%)}
-.ns-pricing-subtitle{margin:0 0 15px;color:#aeb1bd;font-size:12px}
-.ns-pricing-shell .ns-price-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.ns-pricing-shell .ns-price-tabs button{cursor:pointer;border:1px solid #51545e;padding:11px 17px;background:#17191e;color:#eee;letter-spacing:.07em;font-size:11px;transition:background .2s,border-color .2s}
-.ns-pricing-shell .ns-price-tabs button:hover{border-color:#fff}
-.ns-pricing-shell .ns-price-tabs button[aria-pressed=true]{background:#f3f3f5;color:#111;border-color:#f3f3f5}
-.ns-pricing-card{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:24px;border:1px solid #51545e;background:linear-gradient(115deg,#16181d,#08090b);position:relative;z-index:1}
-.ns-pricing-main{min-width:0}.ns-pricing-label{display:block;color:#f5f5f7;font-size:13px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
-.ns-pricing-card .ns-price-detail{margin:9px 0 4px;line-height:1.05;color:#fff}.ns-pricing-card .ns-price-detail strong{font-size:clamp(38px,5vw,66px);font-weight:950;letter-spacing:-.055em}
-.ns-pricing-desc{color:#aeb1bd;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
-.ns-pricing-action{display:flex;flex-direction:column;align-items:flex-end;gap:12px;flex-shrink:0}.ns-pricing-action span{font-size:9px;letter-spacing:.14em;color:#8f939d}
-.ns-pricing-action .btn{font-size:12px;padding:17px 26px;white-space:nowrap}
-@media(max-width:620px){.ns-pricing-shell{padding:12px}.ns-pricing-card{flex-direction:column;align-items:stretch;padding:18px}.ns-pricing-action{align-items:stretch}.ns-pricing-action .btn{text-align:center}.ns-pricing-action span{display:none}}
+/* Compact Nocturne pricing - designed for narrow product modal */
+.ns-pricing-shell{padding:0;border:0;background:transparent;position:relative;overflow:visible}
+.ns-pricing-shell:after{display:none}
+.ns-pricing-subtitle{margin:0 0 12px;color:#969ba5;font-size:11px;letter-spacing:.02em}
+.ns-pricing-shell .ns-price-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 12px}
+.ns-pricing-shell .ns-price-tabs button{cursor:pointer;border:1px solid #454952;border-radius:5px;padding:8px 13px;background:#17191e;color:#cfd0d5;letter-spacing:.055em;font-size:10px;font-weight:800;transition:background .2s,border-color .2s}
+.ns-pricing-shell .ns-price-tabs button:hover{border-color:#d7d8df}
+.ns-pricing-shell .ns-price-tabs button[aria-pressed=true]{background:#f1f2f4;color:#0c0d0f;border-color:#f1f2f4}
+.ns-pricing-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:18px 20px;border:1px solid #40434c;border-radius:7px;background:linear-gradient(120deg,#191b21,#0d0e12 75%);position:relative;overflow:hidden}
+.ns-pricing-card:after{content:"";position:absolute;right:-55px;top:-95px;width:210px;height:210px;background:radial-gradient(circle,#ffffff0b,transparent 70%);pointer-events:none}
+.ns-pricing-main{min-width:0;position:relative;z-index:1}
+.ns-pricing-label{display:block;color:#b4b7c0;font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}
+.ns-pricing-card .ns-price-detail{margin:6px 0 4px;line-height:1;color:#fff}
+.ns-pricing-card .ns-price-detail strong{font-size:clamp(36px,5vw,48px);font-weight:900;letter-spacing:-.055em}
+.ns-pricing-desc{color:#b7bac2;font-size:11px;line-height:1.45;overflow-wrap:anywhere}
+.ns-pricing-action{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0;position:relative;z-index:1}
+.ns-pricing-action span{font-size:8px;letter-spacing:.12em;color:#9296a0}
+.ns-pricing-action .btn{font-size:11px;padding:13px 18px;white-space:nowrap;border-radius:4px;letter-spacing:.09em}
+@media(max-width:480px){.ns-pricing-card{padding:15px;gap:10px}.ns-pricing-card .ns-price-detail strong{font-size:36px}.ns-pricing-action span{display:none}.ns-pricing-action .btn{padding:12px 13px;font-size:10px}}
+@media(max-width:340px){.ns-pricing-card{grid-template-columns:1fr}.ns-pricing-action{align-items:stretch}.ns-pricing-action .btn{text-align:center}}
 </style><style>
 .ns-faq-section .faq{max-width:1120px}.ns-faq-section h2{font-size:clamp(32px,5vw,58px);letter-spacing:-.055em;line-height:1.05;margin:12px 0 26px}
 .ns-faq-tabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}.ns-faq-tab{border:1px solid #404148;border-radius:100px;background:transparent;color:#c9c9ce;padding:10px 16px;font-size:12px;font-weight:700;transition:background .2s,color .2s,border-color .2s}
