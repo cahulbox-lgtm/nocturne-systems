@@ -191,6 +191,9 @@
 .ns-discord-reviews .review-date{font-size:10px}
 .ns-reviews-foot{margin-top:17px;text-align:center;color:#989da8;font:11px monospace}
 @media(max-width:700px){.ns-new-hero{min-height:auto}.ns-new-hero .wrap{padding:85px 0 50px}.ns-hero-facts{grid-template-columns:repeat(2,1fr)}.ns-hero-facts>div:nth-child(2){border-right:0}.ns-hero-facts>div:nth-child(-n+2){border-bottom:1px solid #ffffff18}.ns-step-grid{grid-template-columns:1fr}.ns-step-grid>div{border-right:0;border-bottom:1px solid #454851}.ns-section-heading{gap:16px}.ns-section-number{font-size:65px}.ns-discord-reviews .reviews-list{padding:12px}}
+/* Keep outlined section digits visually separated at every viewport size */
+.ns-section-number{display:inline-block;flex:0 0 auto;min-width:2.35ch;white-space:nowrap;letter-spacing:.045em!important;font-variant-numeric:tabular-nums;text-align:left;padding-right:.08em;box-sizing:content-box}
+@media(max-width:600px){.ns-section-number{min-width:2.35ch;font-size:clamp(48px,12vw,65px)!important;letter-spacing:.045em!important}}
 </style><style id="ns-hero-layout-fix">
 .ns-new-hero{min-height:690px}
 .ns-new-hero .wrap{width:min(1120px,calc(100% - 44px));padding:68px 0 50px;display:flex;flex-direction:column;align-items:center}
