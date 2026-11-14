@@ -50,6 +50,8 @@
 .ns-extra h3{font-size:13px;letter-spacing:.12em;margin:0 0 14px;text-transform:uppercase}
 .ns-gallery-main{height:min(56vw,430px);min-height:220px;border:1px solid #41434b;background:linear-gradient(130deg,#14161b,#08090b);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .ns-gallery-main img{width:100%;height:100%;object-fit:contain;opacity:1}
+.ns-gallery-main.ns-gallery-smm{height:auto;min-height:0;aspect-ratio:16/9}
+.ns-gallery-main.ns-gallery-smm img{width:100%;height:100%;object-fit:cover;display:block}
 .ns-gallery-note{font-size:11px;color:#9fa1aa;margin:9px 0 0;line-height:1.5}
 .ns-media-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .ns-media-tabs button,.ns-price-tabs button{background:#15171c;border:1px solid #454750;color:#ddd;padding:10px 12px;font-size:11px;font-weight:700}
@@ -330,7 +332,7 @@ function nsPricingOptions(p){
 function nsProductExtras(p){
  const media=(nsProductMedia[p.name]||[]).filter(m=>m&&typeof m.url==='string'&&/^(?:https?:\/\/|assets\/)/.test(m.url));
  const mediaMarkup=media.length
-  ? `<div class="ns-gallery-main" id="ns-gallery-main"><img src="${esc(media[0].url)}" alt="${esc(media[0].alt||p.name+' product media')}" loading="lazy"></div><div class="ns-media-tabs">${media.map((m,i)=>`<button type="button" data-ns-media="${i}" aria-pressed="${i===0}">${esc(m.label||'MEDIA '+(i+1))}</button>`).join('')}</div>`
+  ? `<div class="ns-gallery-main${p.name==='SMM PROJECT'?' ns-gallery-smm':''}" id="ns-gallery-main"><img src="${esc(media[0].url)}" alt="${esc(media[0].alt||p.name+' product media')}" loading="lazy"></div><div class="ns-media-tabs">${media.map((m,i)=>`<button type="button" data-ns-media="${i}" aria-pressed="${i===0}">${esc(m.label||'MEDIA '+(i+1))}</button>`).join('')}</div>`
   : `<div class="ns-gallery-main"><img src="visual.png" alt="Nocturne Systems decorative artwork" loading="lazy"></div><p class="ns-gallery-note">Brand artwork · Product screenshots and demonstrations have not been uploaded.</p>`;
  const options=nsPricingOptions(p);
  const first=options[0];
