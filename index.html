@@ -420,7 +420,7 @@ function close(){modal.classList.remove('open');document.body.style.overflow=''}
  let value=0,finished=false;
  const set=(n)=>{if(finished)return;value=Math.max(value,Math.min(100,n));number.textContent=value+'%';fill.style.width=value+'%'};
  const finish=()=>{if(finished)return;set(100);caption.textContent='SYSTEM READY';finished=true;setTimeout(()=>{loader.classList.add('ns-done');setTimeout(()=>loader.remove(),550)},180)};
- set(20);if(document.readyState==='complete'){set(90);finish()}else{set(65);window.addEventListener('load',()=>{set(90);finish()},{once:true});setTimeout(finish,3500)}
+ set(20);const completeLoading=()=>{set(90);Promise.race([window.__nsCmsReady||Promise.resolve(),new Promise(resolve=>setTimeout(resolve,4500))]).then(finish,finish)};if(document.readyState==='complete')completeLoading();else window.addEventListener('load',completeLoading,{once:true});
  const reveal=()=>{const elements=document.querySelectorAll('.sectionhead,.review-head,.banner,.ns-updates h2,.ns-update');if(!('IntersectionObserver' in window)){elements.forEach(el=>el.classList.add('ns-visible'));return}const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('ns-visible');observer.unobserve(e.target)}})},{threshold:.08});elements.forEach(el=>{el.classList.add('ns-reveal');observer.observe(el)})};
  reveal();
 })();
@@ -523,7 +523,7 @@ update();
 })();
 </script><script>
 /* Nocturne CMS: optional remote overrides. The original catalog stays as fallback. */
-(async function(){
+window.__nsCmsReady=(async function(){
  try{
   const r=await fetch('/api/site-content',{cache:'no-store'});if(!r.ok)return;
   const {content:c}=await r.json();if(!c)return;
@@ -531,6 +531,8 @@ update();
    const featuredNames=new Set(['FACEIT ESP','VALORANT COLORBOT','VALORANT TRIGGERBOT','EXTERNAL HARDWARE COLORBOT']);
    const featured=products.filter(p=>featuredNames.has(p.name));
    const merged=[...c.products];
+   const currentSmm=products.find(p=>p.name==='SMM PROJECT');
+   if(currentSmm){const stale=merged.findIndex(p=>/^(VAL[- ]?SMM|SMM PROJECT)$/i.test(p.name||''));if(stale>=0)merged[stale]={...merged[stale],...currentSmm};else merged.push(currentSmm)}
    for(const p of featured){if(!merged.some(item=>item.name===p.name))merged.push(p)}
    products.splice(0,products.length,...merged);if(typeof draw==='function')draw();
   }
