@@ -259,7 +259,7 @@ function nsCoverFor(p){
  if(n.includes('aimbot'))return {url:'assets/covers/aimbot.png',label:'02 / AI AIMBOT'};
  if(n.includes('woofer')||n.includes('woof')||n.includes('spoofer'))return {url:'assets/covers/spoofer.png',label:'03 / SPOOFER'};
  if(n.includes('rdma'))return {url:'assets/covers/rdma.png',label:'04 / RDMA'};
- if(n.includes('smm project'))return {url:'assets/covers/valsmm.png',label:'05 / SMM PROJECT'};
+ if(n.includes('smm project'))return {url:'visual.png',label:'05 / SMM PROJECT'};
  if(n.includes('bios'))return {url:'assets/covers/bios.png',label:'06 / BIOS MOD'};
  return {url:'visual.png',label:c.toUpperCase()};
 }
@@ -271,7 +271,7 @@ function draw(){
  const list=[...groups,...others];
  document.getElementById('empty').hidden=!!list.length;
  grid.innerHTML=list.map((p,i)=>`<article class="product"><div class="productvisual" style="--ns-product-cover:url(&quot;${nsCoverFor(p).url}&quot;)"><span class="index">${esc(nsCoverFor(p).label)}</span></div><div class="productbody"><span class="cat">${esc(p.tag||p.category)}</span><h3>${esc(p.name)}</h3><div class="subtitle">${esc(p.subtitle)}</div>${statusMarkup(p.name)}<div class="productbottom"><div><div class="cat">STARTING AT / PRICE</div><div class="price">${esc(p.price)}</div></div><button ${p.group?`data-group="${p.group}"`:`data-id="${p.id}"`}>${p.group?'VIEW OPTIONS ↗':'DETAILS ↗'}</button></div></div></article>`).join('');
- list.forEach((p,i)=>{if(typeof p.coverUrl!=='string')return;try{const u=new URL(p.coverUrl,location.href);if(u.protocol!=='https:'&&u.origin!==location.origin)return;const visual=grid.children[i]?.querySelector('.productvisual');if(visual)visual.style.setProperty('--ns-product-cover','url('+JSON.stringify(u.href)+')')}catch(e){}});
+ list.forEach((p,i)=>{if(/smm project/i.test(p.name||''))return;if(typeof p.coverUrl!=='string')return;try{const u=new URL(p.coverUrl,location.href);if(u.protocol!=='https:'&&u.origin!==location.origin)return;const visual=grid.children[i]?.querySelector('.productvisual');if(visual)visual.style.setProperty('--ns-product-cover','url('+JSON.stringify(u.href)+')')}catch(e){}});
  grid.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>show(Number(b.dataset.id)));
  grid.querySelectorAll('[data-group]').forEach(b=>b.onclick=()=>showGroup(b.dataset.group));
 }
