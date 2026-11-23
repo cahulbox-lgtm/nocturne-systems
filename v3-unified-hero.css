@@ -1,0 +1,21 @@
+/* Unified full-bleed hero; centered content, no detached outer artwork */
+body{background:#070707}
+body::before,body::after{content:none!important}
+main#home>.wrap{max-width:none;padding:0}
+header.wrap,footer.wrap{max-width:1440px;margin-inline:auto;padding-inline:clamp(22px,3.2vw,48px)}
+.hero{width:100%;margin:0;min-height:680px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding-inline:max(28px,calc((100vw - 1350px)/2 + 44px));gap:clamp(10px,3vw,70px);overflow:hidden;isolation:isolate;border-bottom:0;background:radial-gradient(ellipse 43% 70% at 75% 49%,#262626 0%,#111 54%,#070707 100%)}
+.hero::before{inset:0;background:linear-gradient(90deg,#070707 0%,transparent 36%,transparent 82%,#070707 100%)!important;z-index:-2}
+.hero::after{inset:0;background:repeating-linear-gradient(90deg,transparent 0 139px,#ffffff03 140px),repeating-linear-gradient(0deg,transparent 0 139px,#ffffff02 140px)!important;opacity:.35;z-index:-1}
+.hero-copy{grid-column:1;grid-row:1;padding:80px 0;max-width:650px;width:100%;z-index:2}
+.hero h1{font-size:clamp(54px,5.5vw,88px)}
+.hero p{max-width:510px}
+.art{grid-column:2;grid-row:1;position:relative;inset:auto;width:100%;height:100%;min-height:680px;display:grid;place-items:center;opacity:1;overflow:visible;pointer-events:none;z-index:0}
+.art .disc{width:min(35vw,510px);height:min(35vw,510px)}
+.art .n{font-size:clamp(190px,22vw,335px)}
+.marquee{max-width:1350px;margin:0 auto;padding-inline:20px;border-top:1px solid #292929}
+main#home>.wrap>.section,main#home>.wrap>.support-panel{max-width:1350px;margin-left:auto;margin-right:auto}
+main#home>.wrap>.section{padding-left:24px;padding-right:24px}
+main#home>.wrap>.support-panel{width:calc(100% - 48px)}
+@media(max-width:1050px){.hero{padding-inline:clamp(24px,4vw,55px);gap:15px}.hero h1{font-size:clamp(48px,6vw,70px)}.art .disc{width:40vw;height:40vw}.art .n{font-size:25vw}}
+@media(max-width:750px){.hero{display:flex;min-height:590px;padding-inline:24px}.hero-copy{padding:75px 0;max-width:600px}.art{position:absolute;grid-column:auto;right:-30%;top:0;width:90%;height:100%;min-height:0;opacity:.22}.art .disc{width:75vw;height:75vw}.art .n{font-size:50vw}.hero h1{font-size:clamp(49px,10vw,75px)}.marquee{padding-inline:16px}main#home>.wrap>.section{padding-left:18px;padding-right:18px}}
+@media(max-width:600px){.hero{padding-inline:18px}.hero-copy{padding:75px 0}.art{right:-40%;opacity:.16}main#home>.wrap>.support-panel{width:calc(100% - 36px)}}
