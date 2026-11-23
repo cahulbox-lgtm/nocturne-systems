@@ -1,0 +1,6 @@
+/* Ambient backdrop beyond the original centered layout, without resizing hero. */
+body{position:relative;isolation:isolate;background:#070707}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 35vw 48vh at 96% 47%,#252525 0%,#151515 35%,transparent 88%),radial-gradient(ellipse 26vw 35vh at 2% 65%,#161616 0%,transparent 85%),repeating-linear-gradient(90deg,transparent 0 119px,#ffffff05 120px),repeating-linear-gradient(0deg,transparent 0 119px,#ffffff04 120px);opacity:.85}
+body::after{content:"";position:fixed;right:-180px;top:19%;width:560px;height:560px;border-radius:50%;border:1px solid #ffffff12;box-shadow:0 0 0 65px #ffffff04,0 0 0 130px #ffffff02,inset 0 0 120px #ffffff06;z-index:-1;pointer-events:none;opacity:.7}
+@media(max-width:900px){body::after{right:-300px;opacity:.3}body::before{opacity:.45}}
+@media(prefers-reduced-motion:reduce){body::before,body::after{animation:none}}
