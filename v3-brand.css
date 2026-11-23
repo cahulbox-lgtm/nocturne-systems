@@ -1,7 +1,7 @@
 /* Unified N + OCTURNE wordmark — one N, not two */
-.logo{display:inline-flex;align-items:center;gap:1px;white-space:nowrap;letter-spacing:normal}
-.logo-emblem{width:auto;height:auto;display:inline-block;font:italic 700 47px/.95 Georgia,serif;letter-spacing:-.09em;padding:0 5px 0 0;transform:skew(-5deg);color:#fff;text-shadow:none}
-.brand-wordmark{display:flex;flex-direction:column;justify-content:center;gap:0;padding-top:2px}
+.logo{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;letter-spacing:normal}
+.logo-emblem{width:auto;height:auto;display:inline-block;font:italic 700 47px/.95 Georgia,serif;letter-spacing:-.09em;padding:0;transform:skew(-5deg);color:#fff;text-shadow:none}
+.brand-wordmark{margin-left:2px;display:flex;flex-direction:column;justify-content:center;gap:0;padding-top:2px}
 .brand-wordmark strong{font:800 19px/.95 'Space Grotesk',sans-serif;letter-spacing:.055em;color:#fff}
 .brand-wordmark small{font:700 9px/1.2 'Space Grotesk',sans-serif;letter-spacing:.42em;color:#a6a6a6;margin-top:5px}
 @media(max-width:600px){.logo-emblem{font-size:40px}.brand-wordmark strong{font-size:16px}.brand-wordmark small{font-size:8px;letter-spacing:.32em}}
